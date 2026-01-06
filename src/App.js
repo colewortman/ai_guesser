@@ -9,8 +9,9 @@ function App() {
   const [aiImage, setAiImage] = useState(null);
   const [realImage, setRealImage] = useState(null);
   const [AIlocated, setAIlocated] = useState(null);
+  const [submitted, setSubmitted] = useState(false);
 
-  useEffect(() => {
+  const loadNextPair = () => {
     fetch("/pairs/index.json")
       .then((res) => res.json())
       .then((data) => {
@@ -26,6 +27,10 @@ function App() {
         setAIlocated(Math.random() < 0.5 ? "left" : "right");
       })
       .catch(console.error);
+  };
+
+  useEffect(() => {
+    loadNextPair();
   }, []);
 
   const accuracy = round === 0 ? 0 : ((correct / round) * 100).toFixed(2);
@@ -41,6 +46,12 @@ function App() {
 
     setRound((r) => r + 1);
     setGuess(null);
+    setSubmitted(true);
+  };
+
+  const handleNext = () => {
+    loadNextPair();
+    setSubmitted(false);
   };
 
   return (
@@ -74,6 +85,9 @@ function App() {
           </div>
           <button disabled={!guess} onClick={handleSubmit}>
             Submit Guess
+          </button>
+          <button disabled={!submitted} onClick={handleNext}>
+            Next
           </button>
         </div>
       )}
