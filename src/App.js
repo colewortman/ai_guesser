@@ -8,14 +8,24 @@ function App() {
   const [guess, setGuess] = useState(null);
   const [aiImage, setAiImage] = useState(null);
   const [realImage, setRealImage] = useState(null);
+  const [AIlocated, setAIlocated] = useState(null);
 
   useEffect(() => {
-    fetch("/pairs/cat1.json")
-      .then((response) => response.json())
+    fetch("/pairs/index.json")
+      .then((res) => res.json())
+      .then((data) => {
+        const pairs = data.pairs;
+        const randomPair = pairs[Math.floor(Math.random() * pairs.length)];
+
+        return fetch(`/pairs/${randomPair}.json`);
+      })
+      .then((res) => res.json())
       .then((pair) => {
         setAiImage(pair.ai);
         setRealImage(pair.real);
-      });
+        setAIlocated(Math.random() < 0.5 ? "left" : "right");
+      })
+      .catch(console.error);
   }, []);
 
   const accuracy = round === 0 ? 0 : ((correct / round) * 100).toFixed(2);
@@ -23,7 +33,6 @@ function App() {
   const handleSubmit = () => {
     if (!guess) return;
 
-    const AIlocated = "left"; // Placeholder logic
     const userCorrect = guess === AIlocated;
 
     if (userCorrect) {
@@ -49,13 +58,19 @@ function App() {
             className={`left-card ${guess === "left" ? "selected" : ""}`}
             onClick={() => setGuess("left")}
           >
-            <img src={aiImage} alt="AI" />
+            <img
+              src={AIlocated === "left" ? aiImage : realImage}
+              alt="left-image"
+            />
           </div>
           <div
             className={`right-card ${guess === "right" ? "selected" : ""}`}
             onClick={() => setGuess("right")}
           >
-            <img src={realImage} alt="Real" />
+            <img
+              src={AIlocated === "right" ? aiImage : realImage}
+              alt="right-image"
+            />
           </div>
           <button disabled={!guess} onClick={handleSubmit}>
             Submit Guess
