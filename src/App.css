@@ -5,74 +5,204 @@
 body {
   margin: 0;
   font-family: Arial, Helvetica, sans-serif;
-  background-color: #f5f5f5;
+  background-color: #EAE2B7;
 }
 
 .App {
   text-align: center;
   padding: 20px;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
 }
 
 .App-header {
-  background-color: #282c34;
+  background-color: #003049;
   color: white;
   padding: 20px;
   border-radius: 8px;
   margin-bottom: 30px;
 }
 
+.stats {
+  align-self: center;
+  width: fit-content;
+  background-color: #003049;
+  color: white;
+  padding: 12px 24px;
+  border-radius: 50px;
+  margin-bottom: 30px;
+  display: inline-block;
+  border: 3px solid #003049;
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2);
+}
+
+.directions {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  flex: 1;
+  padding-top: 120px;
+}
+
+
+.directions-content {
+  background-color: #FCBF49;
+  border: 4px solid #FCBF49;
+  border-radius: 12px;
+  padding: 40px;
+  max-width: 600px;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
+
+.directions-content h2 {
+  color: #003049;
+  margin-top: 0;
+  margin-bottom: 25px;
+  font-size: 24px;
+}
+
+.directions-content p {
+  color: #003049;
+  font-size: 20px;
+  margin-bottom: 30px;
+  line-height: 1.6;
+}
+
+.play-button {
+  background-color: #003049;
+  padding: 14px 36px;
+  font-size: 18px;
+  border: none;
+  border-radius: 6px;
+  color: white;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background-color 0.2s ease, transform 0.1s ease;
+}
+
+.play-button:hover {
+  background-color: #1a5490;
+  transform: scale(1.05);
+}
+
+.play-button:active {
+  transform: scale(0.98);
+}
+
 .content {
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
-  gap: 40px;
-  flex-wrap: wrap;
+  gap: 180px;
+  flex: 1;
+  padding: 20px;
 }
 
 .left-card,
 .right-card {
-  border: 3px solid transparent;
-  border-radius: 8px;
-  padding: 10px;
+  border: 4px solid transparent;
+  border-radius: 12px;
+  padding: 15px;
   cursor: pointer;
   transition: transform 0.2s ease, border 0.2s ease;
   background-color: white;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 .left-card img,
 .right-card img {
-  width: 250px;
-  height: auto;
-  border-radius: 6px;
+  width: 800px;
+  height: 500px;
+  border-radius: 8px;
+  display: block;
+  object-fit: cover;
 }
 
-.left-card:hover,
-.right-card:hover {
-  transform: scale(1.05);
+.left-card:hover:not(.ai-image):not(.real-image),
+.right-card:hover:not(.ai-image):not(.real-image) {
+  transform: scale(1.03);
 }
 
 .selected {
-  border: 3px solid #4caf50;
+  border: 4px solid #FCBF49;
+}
+
+.ai-image {
+  border: 4px solid #4caf50 !important;
+  transform: scale(1.06);
+}
+
+.real-image {
+  border: 4px solid #D62828 !important;
+}
+
+.image-pair {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 30px;
+}
+
+.button-container {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  width: 100%;
+  position: relative;
+  height: 60px;
+  margin-top: -60px;
+}
+
+.button-container button{
+  position: absolute;
+}
+
+button {
+  padding: 16px 40px;
+  font-size: 18px;
+  border: none;
+  border-radius: 6px;
+  color: white;
+  cursor: pointer;
+  transition: opacity 0.3s ease;
+  transition: scale 0.2s ease;
+  font-weight: bold;
+  opacity: 1;
+  scale: 1;
 }
 
 .submit-button {
-  display: block;
-  margin: 30px auto 0;
-  padding: 12px 24px;
-  font-size: 16px;
-  border: none;
-  border-radius: 6px;
-  background-color: #4caf50;
-  color: white;
-  cursor: pointer;
-  transition: background-color 0.2s ease;
+  background-color: #F77F00;
 }
 
-.submit-button:disabled {
-  background-color: #9e9e9e;
+.next-button {
+  background-color: #003049;
+}
+
+button:disabled {
+  background-color: #FCBF49;
   cursor: not-allowed;
+  visibility: hidden;
+  opacity: 0;
+  scale: 0.1;
+}
+
+button:not(:disabled):hover {
+  transform: scale(1.05);
 }
 
 .submit-button:not(:disabled):hover {
-  background-color: #43a047;
+  background-color: #D65A00;
+}
+
+.next-button:not(:disabled):hover {
+  background-color: #1a5490;
+}
+
+button:not(:disabled):active {
+  transform: scale(0.98);
 }

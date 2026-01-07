@@ -1,5 +1,5 @@
 import React from "react";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import "./App.css";
 
 function App() {
@@ -10,6 +10,7 @@ function App() {
   const [realImage, setRealImage] = useState(null);
   const [AIlocated, setAIlocated] = useState(null);
   const [submitted, setSubmitted] = useState(false);
+  const [showDirections, setShowDirections] = useState(true);
 
   const loadNextPair = () => {
     fetch("/pairs/index.json")
@@ -29,10 +30,6 @@ function App() {
       .catch(console.error);
   };
 
-  useEffect(() => {
-    loadNextPair();
-  }, []);
-
   const accuracy = round === 0 ? 0 : ((correct / round) * 100).toFixed(2);
 
   const handleSubmit = () => {
@@ -49,6 +46,11 @@ function App() {
     setSubmitted(true);
   };
 
+  const handlePlay = () => {
+    setShowDirections(false);
+    loadNextPair();
+  };
+
   const handleNext = () => {
     loadNextPair();
     setSubmitted(false);
@@ -58,37 +60,70 @@ function App() {
     <div className="App">
       <header className="App-header">
         <h1>AI or Real?</h1>
-        <p>
-          Round: {round} | Correct: {correct} | Accuracy: {accuracy}%
-        </p>
       </header>
+
+      <div className="stats">
+        <h2>
+          Round: {round} | Correct: {correct} | Accuracy: {accuracy}%
+        </h2>
+      </div>
+
+      {showDirections ? (
+        <div className="directions">
+          <div className="directions-content">
+            <h2>
+              Can you tell the difference between AI-generated and real images?
+            </h2>
+            <p>Click the image you think is AI-generated.</p>
+            <button className="play-button" onClick={handlePlay}>
+              Play
+            </button>
+          </div>
+        </div>
+      ) : null}
 
       {aiImage && realImage && (
         <div className="content">
-          <div
-            className={`left-card ${guess === "left" ? "selected" : ""}`}
-            onClick={() => setGuess("left")}
-          >
-            <img
-              src={AIlocated === "left" ? aiImage : realImage}
-              alt="left-image"
-            />
+          <div className="image-pair">
+            <div
+              className={`left-card ${guess === "left" ? "selected" : ""} ${
+                submitted && AIlocated === "left" ? "ai-image" : ""
+              } ${submitted && AIlocated === "right" ? "real-image" : ""}`}
+              onClick={() => !submitted && setGuess("left")}
+            >
+              <img
+                src={AIlocated === "left" ? aiImage : realImage}
+                alt="left-image"
+              />
+            </div>
+            <div
+              className={`right-card ${guess === "right" ? "selected" : ""} ${
+                submitted && AIlocated === "right" ? "ai-image" : ""
+              } ${submitted && AIlocated === "left" ? "real-image" : ""}`}
+              onClick={() => !submitted && setGuess("right")}
+            >
+              <img
+                src={AIlocated === "right" ? aiImage : realImage}
+                alt="right-image"
+              />
+            </div>
           </div>
-          <div
-            className={`right-card ${guess === "right" ? "selected" : ""}`}
-            onClick={() => setGuess("right")}
-          >
-            <img
-              src={AIlocated === "right" ? aiImage : realImage}
-              alt="right-image"
-            />
+          <div className="button-container">
+            <button
+              className="submit-button"
+              disabled={!guess || submitted}
+              onClick={handleSubmit}
+            >
+              Submit
+            </button>
+            <button
+              className="next-button"
+              disabled={!submitted}
+              onClick={handleNext}
+            >
+              Next
+            </button>
           </div>
-          <button disabled={!guess} onClick={handleSubmit}>
-            Submit Guess
-          </button>
-          <button disabled={!submitted} onClick={handleNext}>
-            Next
-          </button>
         </div>
       )}
     </div>
