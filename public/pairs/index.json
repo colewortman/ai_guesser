@@ -1,6 +1,29 @@
 {
   "pairs": [
-    "cat1",
-    "office1"
+    {
+      "id": "animal_01",
+      "ai": "/images/ai_cheetah.jpg",
+      "real": "/images/real_cheetah.jpg"
+    },
+    {
+      "id": "animal_02",
+      "ai": "/images/ai_horse.jpg",
+      "real": "/images/real_horse.jpg"
+    },
+    {
+      "id": "office_01",
+      "ai": "/images/ai_meeting.jpg",
+      "real": "/images/real_meeting.jpg"
+    },
+    {
+      "id": "nature_01",
+      "ai": "/images/ai_mountain.jpg",
+      "real": "/images/real_mountain.jpg"
+    },
+    {
+      "id": "nature_02",
+      "ai": "/images/ai_stars.jpg",
+      "real": "/images/real_stars.jpg"
+    }
   ]
 }

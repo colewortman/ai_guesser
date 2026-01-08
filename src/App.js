@@ -1,34 +1,53 @@
 import React from "react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import "./App.css";
 
 function App() {
-  const [round, setRound] = useState(0);
-  const [correct, setCorrect] = useState(0);
-  const [guess, setGuess] = useState(null);
+  const [showDirections, setShowDirections] = useState(true);
+  const [pairs, setPairs] = useState([]);
+  const [loading, setLoading] = useState(false);
   const [aiImage, setAiImage] = useState(null);
   const [realImage, setRealImage] = useState(null);
   const [AIlocated, setAIlocated] = useState(null);
-  const [submitted, setSubmitted] = useState(false);
-  const [showDirections, setShowDirections] = useState(true);
 
-  const loadNextPair = () => {
+  const [round, setRound] = useState(0);
+  const [correct, setCorrect] = useState(0);
+  const [guess, setGuess] = useState(null);
+  const [submitted, setSubmitted] = useState(false);
+
+  const loadPairs = () => {
+    setLoading(true);
     fetch("/pairs/index.json")
       .then((res) => res.json())
       .then((data) => {
-        const pairs = data.pairs;
-        const randomPair = pairs[Math.floor(Math.random() * pairs.length)];
-
-        return fetch(`/pairs/${randomPair}.json`);
+        setPairs(data.pairs);
+        setLoading(false);
       })
-      .then((res) => res.json())
-      .then((pair) => {
-        setAiImage(pair.ai);
-        setRealImage(pair.real);
-        setAIlocated(Math.random() < 0.5 ? "left" : "right");
-      })
-      .catch(console.error);
+      .catch((err) => {
+        console.error("Error loading pairs:", err);
+        setLoading(false);
+      });
   };
+
+  const loadNextPair = () => {
+    if (pairs.length === 0) {
+      loadPairs();
+      return;
+    }
+
+    const randomIndex = Math.floor(Math.random() * pairs.length);
+    const pair = pairs[randomIndex];
+
+    setAiImage(pair.ai);
+    setRealImage(pair.real);
+
+    const aiPosition = Math.random() < 0.5 ? "left" : "right";
+    setAIlocated(aiPosition);
+  };
+
+  useEffect(() => {
+    loadPairs();
+  }, []);
 
   const accuracy = round === 0 ? 0 : ((correct / round) * 100).toFixed(2);
 
@@ -75,9 +94,13 @@ function App() {
               Can you tell the difference between AI-generated and real images?
             </h2>
             <p>Click the image you think is AI-generated.</p>
-            <button className="play-button" onClick={handlePlay}>
-              Play
-            </button>
+            {loading ? (
+              <div className="spinner"></div>
+            ) : (
+              <button className="play-button" onClick={handlePlay}>
+                Play
+              </button>
+            )}
           </div>
         </div>
       ) : null}
