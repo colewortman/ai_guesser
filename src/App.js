@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import "./App.css";
 
 function App() {
+  // State variables for data
   const [showDirections, setShowDirections] = useState(true);
   const [pairs, setPairs] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -10,11 +11,13 @@ function App() {
   const [realImage, setRealImage] = useState(null);
   const [AIlocated, setAIlocated] = useState(null);
 
+  // State variables for game logic
   const [round, setRound] = useState(0);
   const [correct, setCorrect] = useState(0);
   const [guess, setGuess] = useState(null);
   const [submitted, setSubmitted] = useState(false);
 
+  // Load all image pairs from the JSON file
   const loadPairs = () => {
     setLoading(true);
     fetch("/pairs/index.json")
@@ -29,6 +32,7 @@ function App() {
       });
   };
 
+  // Load the next pair of images from our cached pairs
   const loadNextPair = () => {
     const randomIndex = Math.floor(Math.random() * pairs.length);
     const pair = pairs[randomIndex];
@@ -40,14 +44,17 @@ function App() {
     setAIlocated(aiPosition);
   };
 
+  // Load pairs on initial render
   useEffect(() => {
     if (pairs.length === 0) {
       loadPairs();
     }
   }, [pairs]);
 
+  // Calculate accuracy
   const accuracy = round === 0 ? 0 : ((correct / round) * 100).toFixed(2);
 
+  // Handle user submitting a guess
   const handleSubmit = () => {
     if (!guess) return;
 
@@ -62,11 +69,13 @@ function App() {
     setSubmitted(true);
   };
 
+  // Handle starting the game
   const handlePlay = () => {
     setShowDirections(false);
     loadNextPair();
   };
 
+  // Handle loading the next pair
   const handleNext = () => {
     loadNextPair();
     setSubmitted(false);
