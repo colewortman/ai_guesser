@@ -30,11 +30,6 @@ function App() {
   };
 
   const loadNextPair = () => {
-    if (pairs.length === 0) {
-      loadPairs();
-      return;
-    }
-
     const randomIndex = Math.floor(Math.random() * pairs.length);
     const pair = pairs[randomIndex];
 
@@ -46,8 +41,10 @@ function App() {
   };
 
   useEffect(() => {
-    loadPairs();
-  }, []);
+    if (pairs.length === 0) {
+      loadPairs();
+    }
+  }, [pairs]);
 
   const accuracy = round === 0 ? 0 : ((correct / round) * 100).toFixed(2);
 
