@@ -308,214 +308,51 @@ button:not(:disabled):active {
 
 /* Tablet Styles (768px and below) */
 @media (max-width: 768px) {
-  .App {
-    padding: 10px;
-  }
-
-  .App-header {
-    padding: 15px;
-    margin-bottom: 20px;
-  }
-
-  .App-header h1 {
-    font-size: 24px;
-    margin: 0;
-  }
-
-  .round-counter {
-    padding: 10px 16px;
-    margin-bottom: 20px;
-    font-size: 14px;
-  }
-
-  .round-counter h2 {
-    margin: 0;
-    font-size: 14px;
-  }
-
-  .game-over-card {
-    padding: 25px;
-    max-width: 100%;
-    margin: 0 15px;
-  }
-
-  .game-over-card h2 {
-    font-size: 36px;
-    margin-bottom: 20px;
-  }
-
-  .game-over-card p {
-    font-size: 18px;
-    margin: 10px 0;
-  }
-
-  .play-again-button {
-    padding: 12px 28px;
-    font-size: 16px;
-    margin-top: 20px;
-  }
-
-  .game-over {
-    padding: 30px;
-  }
-
-  .directions {
-    padding-top: 40px;
-  }
-
-  .directions-content {
-    padding: 25px;
-    max-width: 100%;
-    margin: 0 15px;
-  }
-
-  .directions-content h2 {
-    font-size: 20px;
-    margin-bottom: 15px;
-  }
-
-  .directions-content p {
-    font-size: 16px;
-    margin-bottom: 20px;
-  }
-
-  .play-button {
-    padding: 12px 28px;
-    font-size: 16px;
-  }
-
   .content {
-    gap: 60px;
+    gap: 30px;
     padding: 10px;
+    flex: 1;
+    justify-content: flex-start;
   }
 
   .image-pair {
     flex-direction: column;
-    gap: 20px;
+    gap: 15px;
+    width: 100%;
+    max-height: 60vh;
   }
 
   .left-card img,
   .right-card img {
     width: 100%;
-    max-width: 500px;
     height: auto;
-    aspect-ratio: 8 / 5;
+    max-height: 50vh;
+    aspect-ratio: 8/5;
+    border-radius: 6px;
   }
 
   .button-container {
-    height: auto;
-    margin-top: 20px;
-    gap: 10px;
-    position: static;
-    flex-direction: column;
+    position: relative;       /* relative parent for absolute button */
+    height: 60px;             /* fixed height to reserve space */
+    width: 100%;
+    margin-top: 10px;
   }
 
   .button-container button {
-    position: static;
+    position: absolute;       /* absolute so buttons overlap */
+    top: 0;
+    left: 0;
     width: 100%;
-  }
-
-  button {
-    padding: 12px 24px;
-    font-size: 16px;
-  }
-
-  .ai-image {
-    transform: scale(1.02) !important;
-  }
-
-  .real-image {
-    transform: scale(1.02) !important;
+    height: 100%;
   }
 }
 
 /* Phone Styles (480px and below) */
 @media (max-width: 480px) {
-  .App {
-    padding: 8px;
-    min-height: 100vh;
-  }
-
-  .App-header {
-    padding: 12px;
-    margin-bottom: 12px;
-    border-radius: 6px;
-  }
-
-  .App-header h1 {
-    font-size: 20px;
-    margin: 0;
-  }
-
-  .round-counter {
-    padding: 8px 12px;
-    margin-bottom: 12px;
-    border-radius: 20px;
-  }
-
-  .round-counter h2 {
-    font-size: 12px;
-    margin: 0;
-  }
-
-  .game-over-card {
-    padding: 20px;
-    max-width: 100%;
-    margin: 0 10px;
-    border-radius: 8px;
-  }
-
-  .game-over-card h2 {
-    font-size: 28px;
-    margin-bottom: 15px;
-  }
-
-  .game-over-card p {
-    font-size: 16px;
-    margin: 8px 0;
-  }
-
-  .play-again-button {
-    padding: 10px 20px;
-    font-size: 14px;
-    margin-top: 15px;
-  }
-
-  .game-over {
-    padding: 20px;
-  }
-
-  .directions {
-    padding-top: 20px;
-    justify-content: center;
-  }
-
-  .directions-content {
-    padding: 20px;
-    max-width: 100%;
-    margin: 0 10px;
-    border-radius: 8px;
-  }
-
-  .directions-content h2 {
-    font-size: 18px;
-    margin-bottom: 12px;
-  }
-
-  .directions-content p {
-    font-size: 14px;
-    margin-bottom: 16px;
-  }
-
-  .play-button {
-    padding: 10px 20px;
-    font-size: 14px;
-    border-radius: 4px;
-  }
-
   .content {
-    gap: 30px;
+    gap: 20px;
     padding: 8px;
+    flex: 1;
     justify-content: flex-start;
   }
 
@@ -523,12 +360,7 @@ button:not(:disabled):active {
     flex-direction: column;
     gap: 12px;
     width: 100%;
-  }
-
-  .left-card,
-  .right-card {
-    padding: 10px;
-    border-radius: 8px;
+    max-height: 55vh;
   }
 
   .left-card img,
@@ -536,61 +368,23 @@ button:not(:disabled):active {
     width: 100%;
     max-width: 100%;
     height: auto;
-    aspect-ratio: 8 / 5;
+    max-height: 45vh;
     border-radius: 6px;
   }
 
   .button-container {
-    height: auto;
-    margin-top: 12px;
-    gap: 8px;
-    position: static;
-    flex-direction: column;
+    position: relative;
+    height: 50px;   /* slightly smaller for phones */
     width: 100%;
+    margin-top: 8px;
   }
 
   .button-container button {
-    position: static;
+    position: absolute;
+    top: 0;
+    left: 0;
     width: 100%;
-  }
-
-  button {
-    padding: 10px 16px;
-    font-size: 14px;
-    border-radius: 4px;
-  }
-
-  .submit-button {
-    background-color: #F77F00;
-  }
-
-  .next-button {
-    background-color: #003049;
-  }
-
-  .selected {
-    border: 3px solid #FCBF49;
-  }
-
-  .ai-image {
-    border: 3px solid #4caf50 !important;
-    transform: scale(1.01) !important;
-  }
-
-  .real-image {
-    border: 3px solid #D62828 !important;
-    transform: scale(1.01) !important;
-  }
-
-  .left-card:hover:not(.ai-image):not(.real-image),
-  .right-card:hover:not(.ai-image):not(.real-image) {
-    transform: scale(1.01);
-  }
-
-  .spinner {
-    width: 32px;
-    height: 32px;
-    border: 3px solid rgba(252, 191, 73, 0.3);
-    border-top: 3px solid #1a5490;
+    height: 100%;
   }
 }
+
