@@ -4,14 +4,17 @@ import "./App.css";
 
 function App() {
   // State variables for data
-  const [showDirections, setShowDirections] = useState(true);
   const [pairs, setPairs] = useState([]);
+  const [batch, setBatch] = useState([]);
+  const [currentIndex, setCurrentIndex] = useState(0);
   const [loading, setLoading] = useState(false);
   const [aiImage, setAiImage] = useState(null);
   const [realImage, setRealImage] = useState(null);
   const [AIlocated, setAIlocated] = useState(null);
 
   // State variables for game logic
+  const [showDirections, setShowDirections] = useState(true);
+  const [gameOver, setGameOver] = useState(false);
   const [round, setRound] = useState(0);
   const [correct, setCorrect] = useState(0);
   const [guess, setGuess] = useState(null);
@@ -32,19 +35,24 @@ function App() {
       });
   };
 
-  // Load the next pair of images from our cached pairs
-  const loadNextPair = () => {
-    const randomIndex = Math.floor(Math.random() * pairs.length);
-    const pair = pairs[randomIndex];
+  // Load 10 random image pairs from our cached pairs
+  const loadNextBatch = () => {
+    const shuffled = [...pairs].sort(() => 0.5 - Math.random());
+    const selected = shuffled.slice(0, 10);
 
-    setAiImage(pair.ai);
-    setRealImage(pair.real);
-
-    const aiPosition = Math.random() < 0.5 ? "left" : "right";
-    setAIlocated(aiPosition);
+    setBatch(selected);
+    setCurrentIndex(0);
+    loadNextPair(selected[0]);
   };
 
-  // Load pairs on initial render
+  // Load the next pair of images from our batch
+  const loadNextPair = (pair) => {
+    setAiImage(pair.ai);
+    setRealImage(pair.real);
+    setAIlocated(Math.random() < 0.5 ? "left" : "right");
+  };
+
+  // Load all pairs on initial render
   useEffect(() => {
     if (pairs.length === 0) {
       loadPairs();
@@ -65,20 +73,38 @@ function App() {
     }
 
     setRound((r) => r + 1);
-    setGuess(null);
     setSubmitted(true);
   };
 
   // Handle starting the game
   const handlePlay = () => {
     setShowDirections(false);
-    loadNextPair();
+    loadNextBatch();
   };
 
   // Handle loading the next pair
   const handleNext = () => {
-    loadNextPair();
+    setGuess(null);
+    const nextIndex = currentIndex + 1;
+
+    if (nextIndex >= batch.length) {
+      setGameOver(true);
+      return;
+    }
+
+    setCurrentIndex(nextIndex);
+    loadNextPair(batch[nextIndex]);
     setSubmitted(false);
+  };
+
+  // Handle playing again
+  const handlePlayAgain = () => {
+    setGameOver(false);
+    setRound(0);
+    setCorrect(0);
+    setGuess(null);
+    setSubmitted(false);
+    loadNextBatch();
   };
 
   return (
@@ -87,10 +113,8 @@ function App() {
         <h1>AI or Real?</h1>
       </header>
 
-      <div className="stats">
-        <h2>
-          Round: {round} | Correct: {correct} | Accuracy: {accuracy}%
-        </h2>
+      <div className="round-counter">
+        <h2>Round: {round}/10</h2>
       </div>
 
       {showDirections ? (
@@ -111,13 +135,32 @@ function App() {
         </div>
       ) : null}
 
-      {aiImage && realImage && (
+      {gameOver ? (
+        <div className="game-over">
+          <div className="game-over-card">
+            <h2>Game Over!</h2>
+            <p>
+              You got {correct} out of {round} correct.
+            </p>
+            <p>Your accuracy: {accuracy}%</p>
+            <button className="play-again-button" onClick={handlePlayAgain}>
+              Play Again
+            </button>
+          </div>
+        </div>
+      ) : null}
+
+      {!gameOver && aiImage && realImage && (
         <div className="content">
           <div className="image-pair">
             <div
               className={`left-card ${guess === "left" ? "selected" : ""} ${
-                submitted && AIlocated === "left" ? "ai-image" : ""
-              } ${submitted && AIlocated === "right" ? "real-image" : ""}`}
+                submitted && guess === "left"
+                  ? AIlocated === "left"
+                    ? "ai-image"
+                    : "real-image"
+                  : ""
+              }`}
               onClick={() => !submitted && setGuess("left")}
             >
               <img
@@ -127,8 +170,12 @@ function App() {
             </div>
             <div
               className={`right-card ${guess === "right" ? "selected" : ""} ${
-                submitted && AIlocated === "right" ? "ai-image" : ""
-              } ${submitted && AIlocated === "left" ? "real-image" : ""}`}
+                submitted && guess === "right"
+                  ? AIlocated === "right"
+                    ? "ai-image"
+                    : "real-image"
+                  : ""
+              }`}
               onClick={() => !submitted && setGuess("right")}
             >
               <img
@@ -147,7 +194,7 @@ function App() {
             </button>
             <button
               className="next-button"
-              disabled={!submitted}
+              disabled={!submitted || gameOver}
               onClick={handleNext}
             >
               Next

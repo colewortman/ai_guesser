@@ -24,6 +24,31 @@
       "id": "nature_02",
       "ai": "/images/ai_stars.jpg",
       "real": "/images/real_stars.jpg"
+    },
+    {
+      "id": "nature_03",
+      "ai": "/images/ai_canyon.jpg",
+      "real": "/images/real_canyon.jpg"
+    },
+    {
+      "id": "nature_04",
+      "ai": "/images/ai_plant.jpg",
+      "real": "/images/real_plant.jpg"
+    },
+    {
+      "id": "nature_05",
+      "ai": "/images/ai_plant2.jpg",
+      "real": "/images/real_plant2.jpg"
+    },
+    {
+      "id": "food_01",
+      "ai": "/images/ai_pancake.jpg",
+      "real": "/images/real_pancake.jpg"
+    },
+    {
+      "id": "food_02",
+      "ai": "/images/ai_drink.jpg",
+      "real": "/images/real_drink.jpg"
     }
   ]
 }
