@@ -49,6 +49,56 @@
       "id": "food_02",
       "ai": "/images/ai_drink.jpg",
       "real": "/images/real_drink.jpg"
+    },
+    {
+      "id": "nature_6",
+      "ai": "/images/ai_lake1.jpg",
+      "real": "/images/real_lake1.jpg"
+    },
+    {
+      "id": "nature_7",
+      "ai": "/images/ai_lake2.jpg",
+      "real": "/images/real_lake2.jpg"
+    },
+    {
+      "id": "nature_8",
+      "ai": "/images/ai_forest1.jpg",
+      "real": "/images/real_forest1.jpg"
+    },
+    {
+      "id": "nature_9",
+      "ai": "/images/ai_forest2.jpg",
+      "real": "/images/real_forest2.jpg"
+    },
+    {
+      "id": "nature_10",
+      "ai": "/images/ai_cloud.jpg",
+      "real": "/images/real_cloud.jpg"
+    },
+    {
+      "id": "nature_11",
+      "ai": "/images/ai_desert.jpg",
+      "real": "/images/real_desert.jpg"
+    },
+    {
+      "id": "nature_12",
+      "ai": "/images/ai_savanna.jpg",
+      "real": "/images/real_savanna.jpg"
+    },
+    {
+      "id": "nature_13",
+      "ai": "/images/ai_wave.jpg",
+      "real": "/images/real_wave.jpg"
+    },
+    {
+      "id": "animal_03",
+      "ai": "/images/ai_dolphin.jpg",
+      "real": "/images/real_dolphin.jpg"
+    },
+    {
+      "id": "animal_04",
+      "ai": "/images/ai_fish.jpg",
+      "real": "/images/real_fish.jpg"
     }
   ]
 }
