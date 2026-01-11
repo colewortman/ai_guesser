@@ -24,14 +24,23 @@ jobs:
         with:
           node-version: 24
 
-      # 3. Install dependencies
+      # 3. Cache Node modules
+      - name: Cache node modules
+        uses: actions/cache@v3
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-node-${{ hashFiles('package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+
+      # 4. Install dependencies
       - name: Install dependencies
         run: npm install
 
-      # 4. Run tests (UI + logic)
+      # 5. Run tests (UI + logic)
       - name: Run tests
         run: npm test
 
-      # 5. Build (optional, just to verify build works)
+      # 6. Build (optional, just to verify build works)
       - name: Build
         run: npm run build
