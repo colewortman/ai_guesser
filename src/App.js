@@ -35,9 +35,18 @@ function App() {
       });
   };
 
+  function shuffle(array) {
+    const arr = [...array];
+    for (let i = arr.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [arr[i], arr[j]] = [arr[j], arr[i]];
+    }
+    return arr;
+  }
+
   // Load 10 random image pairs from our cached pairs
   const loadNextBatch = () => {
-    const shuffled = [...pairs].sort(() => 0.5 - Math.random());
+    const shuffled = shuffle(pairs);
     const selected = shuffled.slice(0, 10);
 
     setBatch(selected);
