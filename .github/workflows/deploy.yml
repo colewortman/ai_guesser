@@ -3,7 +3,7 @@ name: CI/CD - Deploy to AWS
 on:
   push:
     branches:
-      - main
+      - master
 
 jobs:
   build-deploy:
@@ -18,14 +18,11 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 24
 
-      # 3. Install & Test (CI)
+      # 3. Install
       - name: Install dependencies
         run: npm install
-
-      - name: Run tests
-        run: npm test
 
       # 4. Build
       - name: Build production

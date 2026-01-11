@@ -1,5 +1,6 @@
 import React from "react";
 import { useState, useEffect } from "react";
+import { getRandomPairs } from "./utils";
 import "./App.css";
 
 function App() {
@@ -37,8 +38,7 @@ function App() {
 
   // Load 10 random image pairs from our cached pairs
   const loadNextBatch = () => {
-    const shuffled = [...pairs].sort(() => 0.5 - Math.random());
-    const selected = shuffled.slice(0, 10);
+    const selected = getRandomPairs(pairs);
 
     setBatch(selected);
     setCurrentIndex(0);
