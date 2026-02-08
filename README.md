@@ -14,6 +14,7 @@ Try the game live: [https://www.aiguesser.it.com](https://www.aiguesser.it.com)
 
 - 10-round interactive guessing game with state-driven logic and accuracy tracking.
 - Randomized AI/real image pairs each round.
+- A live global leaderboard using a custom serverless API built on **AWS API Gateway** using **AWS Lambda** and **DynamoDB**
 - Fully responsive design for desktop, tablet, and mobile devices.
 - Hosted on **AWS S3** with **CloudFront** CDN and HTTPS.
 
