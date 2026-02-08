@@ -11,13 +11,23 @@ export function useLeaderboard() {
   const [scores, setScores] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [service, setService] = useState(null);
 
-  const service = getLeaderboardService();
+  // Resolve the service (may be async on first call)
+  useEffect(() => {
+    const result = getLeaderboardService();
+    if (result instanceof Promise) {
+      result.then(setService);
+    } else {
+      setService(result);
+    }
+  }, []);
 
   /**
    * Fetch the top scores from the leaderboard
    */
   const fetchScores = useCallback(async () => {
+    if (!service) return;
     setLoading(true);
     setError(null);
     try {

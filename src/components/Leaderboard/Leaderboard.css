@@ -92,7 +92,7 @@
 }
 
 /* Empty State */
-.leaderboard-empty {
+.leaderboard .leaderboard-empty {
   text-align: center;
   color: rgba(255, 255, 255, 0.6);
   padding: 30px 20px;

@@ -1,36 +1,57 @@
-import LocalLeaderboardService from './LocalLeaderboardService';
-// Future: import GlobalLeaderboardService from './GlobalLeaderboardService';
+import LocalLeaderboardService from "./LocalLeaderboardService";
+import GlobalLeaderboardService from "./GlobalLeaderboardService";
 
 /**
  * Service factory for the leaderboard.
  *
- * To switch to a global leaderboard later:
- * 1. Create GlobalLeaderboardService implementing the same interface
- * 2. Set USE_GLOBAL_LEADERBOARD to true (or use an environment variable)
- * 3. The rest of the app will work without changes
+ * When REACT_APP_LEADERBOARD_API is set, attempts to reach the global API.
+ * Falls back to local (localStorage) service if the API is unreachable.
  */
 
-// Configuration flag - swap implementations here
-const USE_GLOBAL_LEADERBOARD = false;
+const API_URL = process.env.REACT_APP_LEADERBOARD_API;
 
 let serviceInstance = null;
+let serviceReady = null; // Promise that resolves when service is determined
+
+/**
+ * Initialize the service by checking API availability.
+ * Returns a promise that resolves to the chosen service.
+ */
+function initService() {
+  if (!API_URL) {
+    serviceInstance = new LocalLeaderboardService();
+    return Promise.resolve(serviceInstance);
+  }
+
+  const apiUrl = API_URL.replace(/\/+$/, "");
+  return fetch(`${apiUrl}/scores?limit=1`, { method: "GET" })
+    .then(() => {
+      serviceInstance = new GlobalLeaderboardService(API_URL);
+      return serviceInstance;
+    })
+    .catch(() => {
+      console.warn("Global leaderboard unreachable, falling back to local.");
+      serviceInstance = new LocalLeaderboardService();
+      return serviceInstance;
+    });
+}
 
 /**
  * Get the leaderboard service singleton.
- * Uses lazy initialization to create the service on first call.
+ * Returns a promise on first call (while checking API), then returns synchronously.
  */
 export function getLeaderboardService() {
-  if (!serviceInstance) {
-    if (USE_GLOBAL_LEADERBOARD) {
-      // Future: serviceInstance = new GlobalLeaderboardService(process.env.REACT_APP_LEADERBOARD_API);
-      throw new Error('Global leaderboard not yet implemented. Set USE_GLOBAL_LEADERBOARD to false.');
-    } else {
-      serviceInstance = new LocalLeaderboardService();
-    }
+  if (serviceInstance) {
+    return serviceInstance;
   }
-  return serviceInstance;
+
+  if (!serviceReady) {
+    serviceReady = initService();
+  }
+
+  return serviceReady;
 }
 
 // Export for direct access if needed
-export { LocalLeaderboardService };
-export { default as LeaderboardService } from './LeaderboardService';
+export { LocalLeaderboardService, GlobalLeaderboardService };
+export { default as LeaderboardService } from "./LeaderboardService";

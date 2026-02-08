@@ -25,6 +25,7 @@ function App() {
 
   // State variables for leaderboard
   const [showHighScoreForm, setShowHighScoreForm] = useState(false);
+  const [checkingHighScore, setCheckingHighScore] = useState(false);
   const [playerRank, setPlayerRank] = useState(null);
   const [newEntryId, setNewEntryId] = useState(null);
 
@@ -105,6 +106,7 @@ function App() {
 
     if (nextIndex >= batch.length) {
       setGameOver(true);
+      setCheckingHighScore(true);
 
       // Check if this score qualifies for the leaderboard
       const isHigh = await checkHighScore(correct);
@@ -113,6 +115,7 @@ function App() {
         setPlayerRank(rank);
         setShowHighScoreForm(true);
       }
+      setCheckingHighScore(false);
       return;
     }
 
@@ -129,6 +132,7 @@ function App() {
     setGuess(null);
     setSubmitted(false);
     setShowHighScoreForm(false);
+    setCheckingHighScore(false);
     setPlayerRank(null);
     setNewEntryId(null);
     loadNextBatch();
@@ -197,7 +201,7 @@ function App() {
                 score={correct}
                 accuracy={accuracy}
               />
-            ) : (
+            ) : !checkingHighScore ? (
               <>
                 <Leaderboard
                   scores={scores}
@@ -208,7 +212,7 @@ function App() {
                   Play Again
                 </button>
               </>
-            )}
+            ) : null}
           </div>
         </div>
       ) : null}

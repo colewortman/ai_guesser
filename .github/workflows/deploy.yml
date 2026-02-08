@@ -31,6 +31,8 @@ jobs:
       # 4. Build
       - name: Build production
         run: npm run build
+        env:
+          REACT_APP_LEADERBOARD_API: ${{ secrets.REACT_APP_LEADERBOARD_API }}
 
       # 5. Configure AWS
       - name: Configure AWS credentials
