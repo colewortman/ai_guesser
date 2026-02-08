@@ -1,0 +1,245 @@
+/* Leaderboard Container */
+.leaderboard {
+  margin: 20px 0;
+  padding: 20px;
+  background-color: #003049;
+  border-radius: 12px;
+  color: white;
+  width: 100%;
+  max-width: 450px;
+}
+
+.leaderboard h3 {
+  margin: 0 0 15px 0;
+  font-size: 22px;
+  text-align: center;
+  color: #FCBF49;
+}
+
+/* Leaderboard Header Row */
+.leaderboard-header {
+  display: grid;
+  grid-template-columns: 55px 1fr 65px 55px;
+  padding: 10px 12px;
+  background-color: rgba(252, 191, 73, 0.2);
+  border-radius: 6px;
+  font-weight: bold;
+  font-size: 13px;
+  margin-bottom: 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* Leaderboard Entries Container */
+.leaderboard-entries {
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+/* Leaderboard Entry Row */
+.leaderboard-entry {
+  display: grid;
+  grid-template-columns: 55px 1fr 65px 55px;
+  padding: 10px 12px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  transition: background-color 0.2s ease;
+  font-size: 14px;
+}
+
+.leaderboard-entry:last-child {
+  border-bottom: none;
+}
+
+.leaderboard-entry:hover {
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
+/* Highlighted entry (newly added score) */
+.leaderboard-entry.highlighted {
+  background-color: rgba(252, 191, 73, 0.25);
+  animation: highlight-pulse 2s ease-in-out;
+}
+
+@keyframes highlight-pulse {
+  0%, 100% { background-color: rgba(252, 191, 73, 0.25); }
+  50% { background-color: rgba(252, 191, 73, 0.4); }
+}
+
+/* Top 3 rank styling */
+.leaderboard-entry.rank-1 .rank-col { color: #FFD700; font-weight: bold; }
+.leaderboard-entry.rank-2 .rank-col { color: #C0C0C0; font-weight: bold; }
+.leaderboard-entry.rank-3 .rank-col { color: #CD7F32; font-weight: bold; }
+
+/* Column Alignment */
+.rank-col {
+  text-align: center;
+}
+
+.name-col {
+  text-align: left;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  padding-right: 10px;
+}
+
+.score-col {
+  text-align: center;
+}
+
+.accuracy-col {
+  text-align: center;
+}
+
+/* Empty State */
+.leaderboard-empty {
+  text-align: center;
+  color: rgba(255, 255, 255, 0.6);
+  padding: 30px 20px;
+  font-style: italic;
+}
+
+.leaderboard-loading {
+  text-align: center;
+  padding: 30px 20px;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+/* High Score Form */
+.high-score-form {
+  background-color: rgba(76, 175, 80, 0.15);
+  border: 2px solid #4caf50;
+  border-radius: 12px;
+  padding: 25px;
+  margin: 20px 0;
+  text-align: center;
+}
+
+.high-score-form h3 {
+  color: #4caf50;
+  margin: 0 0 8px 0;
+  font-size: 26px;
+}
+
+.high-score-stats {
+  margin: 0 0 20px 0;
+  font-size: 18px;
+  color: #333;
+}
+
+.name-input {
+  padding: 12px 16px;
+  font-size: 18px;
+  border: 2px solid #003049;
+  border-radius: 6px;
+  width: 100%;
+  max-width: 280px;
+  margin-bottom: 15px;
+  text-align: center;
+  box-sizing: border-box;
+}
+
+.name-input:focus {
+  outline: none;
+  border-color: #FCBF49;
+}
+
+.name-input:disabled {
+  background-color: #f0f0f0;
+  cursor: not-allowed;
+}
+
+.form-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+}
+
+.submit-score-button {
+  padding: 12px 30px;
+  font-size: 16px;
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background-color 0.2s ease;
+}
+
+.submit-score-button:hover:not(:disabled) {
+  background-color: #45a049;
+}
+
+.submit-score-button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+.skip-button {
+  padding: 12px 30px;
+  font-size: 16px;
+  background-color: #666;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.skip-button:hover:not(:disabled) {
+  background-color: #555;
+}
+
+.skip-button:disabled {
+  background-color: #999;
+  cursor: not-allowed;
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+  .leaderboard {
+    padding: 15px;
+    max-width: 100%;
+  }
+
+  .leaderboard-header,
+  .leaderboard-entry {
+    grid-template-columns: 45px 1fr 55px 50px;
+    font-size: 13px;
+    padding: 8px 10px;
+  }
+
+  .leaderboard h3 {
+    font-size: 20px;
+  }
+}
+
+@media (max-width: 480px) {
+  .leaderboard-header,
+  .leaderboard-entry {
+    grid-template-columns: 40px 1fr 50px 45px;
+    font-size: 12px;
+    padding: 8px;
+  }
+
+  .high-score-form {
+    padding: 20px 15px;
+  }
+
+  .name-input {
+    max-width: 100%;
+    font-size: 16px;
+  }
+
+  .form-buttons {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .submit-score-button,
+  .skip-button {
+    width: 100%;
+    padding: 14px;
+  }
+}

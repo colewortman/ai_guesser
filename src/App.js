@@ -1,6 +1,8 @@
 import React from "react";
 import { useState, useEffect } from "react";
 import { getRandomPairs } from "./utils";
+import { useLeaderboard } from "./hooks/useLeaderboard";
+import { Leaderboard, HighScoreForm } from "./components/Leaderboard";
 import "./App.css";
 
 function App() {
@@ -20,6 +22,20 @@ function App() {
   const [correct, setCorrect] = useState(0);
   const [guess, setGuess] = useState(null);
   const [submitted, setSubmitted] = useState(false);
+
+  // State variables for leaderboard
+  const [showHighScoreForm, setShowHighScoreForm] = useState(false);
+  const [playerRank, setPlayerRank] = useState(null);
+  const [newEntryId, setNewEntryId] = useState(null);
+
+  // Leaderboard hook
+  const {
+    scores,
+    loading: leaderboardLoading,
+    addScore,
+    checkHighScore,
+    getScoreRank,
+  } = useLeaderboard();
 
   // Load all image pairs from the JSON file
   const loadPairs = () => {
@@ -83,12 +99,20 @@ function App() {
   };
 
   // Handle loading the next pair
-  const handleNext = () => {
+  const handleNext = async () => {
     setGuess(null);
     const nextIndex = currentIndex + 1;
 
     if (nextIndex >= batch.length) {
       setGameOver(true);
+
+      // Check if this score qualifies for the leaderboard
+      const isHigh = await checkHighScore(correct);
+      if (isHigh) {
+        const rank = await getScoreRank(correct, parseFloat(accuracy));
+        setPlayerRank(rank);
+        setShowHighScoreForm(true);
+      }
       return;
     }
 
@@ -104,7 +128,28 @@ function App() {
     setCorrect(0);
     setGuess(null);
     setSubmitted(false);
+    setShowHighScoreForm(false);
+    setPlayerRank(null);
+    setNewEntryId(null);
     loadNextBatch();
+  };
+
+  // Handle submitting a new high score
+  const handleScoreSubmit = async (playerName) => {
+    const entry = await addScore({
+      playerName,
+      score: correct,
+      accuracy: parseFloat(accuracy),
+      totalRounds: round,
+    });
+
+    setNewEntryId(entry.id);
+    setShowHighScoreForm(false);
+  };
+
+  // Handle skipping score submission
+  const handleSkipHighScore = () => {
+    setShowHighScoreForm(false);
   };
 
   return (
@@ -143,9 +188,27 @@ function App() {
               You got {correct} out of {round} correct.
             </p>
             <p>Your accuracy: {accuracy}%</p>
-            <button className="play-again-button" onClick={handlePlayAgain}>
-              Play Again
-            </button>
+
+            {showHighScoreForm ? (
+              <HighScoreForm
+                onSubmit={handleScoreSubmit}
+                onSkip={handleSkipHighScore}
+                rank={playerRank}
+                score={correct}
+                accuracy={accuracy}
+              />
+            ) : (
+              <>
+                <Leaderboard
+                  scores={scores}
+                  loading={leaderboardLoading}
+                  highlightId={newEntryId}
+                />
+                <button className="play-again-button" onClick={handlePlayAgain}>
+                  Play Again
+                </button>
+              </>
+            )}
           </div>
         </div>
       ) : null}
