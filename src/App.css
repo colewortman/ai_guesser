@@ -312,6 +312,31 @@ button:not(:disabled):active {
 
 /* Tablet Styles (768px and below) */
 @media (max-width: 768px) {
+  .game-over {
+    padding: 20px 10px;
+  }
+
+  .game-over-card {
+    padding: 25px 20px;
+    width: 95%;
+  }
+
+  .game-over-card h2 {
+    font-size: 36px;
+    margin-bottom: 15px;
+  }
+
+  .game-over-card p {
+    font-size: 18px;
+    margin: 10px 0;
+  }
+
+  .play-again-button {
+    padding: 14px 30px;
+    font-size: 16px;
+    margin-top: 20px;
+  }
+
   .content {
     gap: 30px;
     padding: 10px;
@@ -353,6 +378,34 @@ button:not(:disabled):active {
 
 /* Phone Styles (480px and below) */
 @media (max-width: 480px) {
+  .game-over {
+    padding: 15px 8px;
+  }
+
+  .game-over-card {
+    padding: 20px 15px;
+    width: 100%;
+    border-radius: 8px;
+  }
+
+  .game-over-card h2 {
+    font-size: 28px;
+    margin-bottom: 12px;
+  }
+
+  .game-over-card p {
+    font-size: 16px;
+    margin: 8px 0;
+    line-height: 1.4;
+  }
+
+  .play-again-button {
+    padding: 12px 24px;
+    font-size: 15px;
+    margin-top: 15px;
+    width: 100%;
+  }
+
   .content {
     gap: 20px;
     padding: 8px;
