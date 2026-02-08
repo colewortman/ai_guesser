@@ -25,7 +25,8 @@ function initService() {
 
   const apiUrl = API_URL.replace(/\/+$/, "");
   return fetch(`${apiUrl}/scores?limit=1`, { method: "GET" })
-    .then(() => {
+    .then((res) => {
+      if (!res.ok) throw new Error(`API returned ${res.status}`);
       serviceInstance = new GlobalLeaderboardService(API_URL);
       return serviceInstance;
     })
