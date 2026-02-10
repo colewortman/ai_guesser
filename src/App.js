@@ -111,7 +111,7 @@ function App() {
       // Check if this score qualifies for the leaderboard
       const isHigh = await checkHighScore(correct);
       if (isHigh) {
-        const rank = await getScoreRank(correct, parseFloat(accuracy));
+        const rank = await getScoreRank(correct);
         setPlayerRank(rank);
         setShowHighScoreForm(true);
       }

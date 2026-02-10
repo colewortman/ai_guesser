@@ -29,10 +29,9 @@ class LeaderboardService {
   /**
    * Get the rank a score would achieve
    * @param {number} score - The score to check
-   * @param {number} accuracy - The accuracy percentage
    * @returns {Promise<number|null>} - Rank (1-10) or null if not in top 10
    */
-  async getScoreRank(score, accuracy) {
+  async getScoreRank(score) {
     throw new Error("getScoreRank must be implemented by subclass");
   }
 }
