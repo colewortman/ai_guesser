@@ -81,13 +81,12 @@ export function useLeaderboard() {
   /**
    * Get the rank a score would achieve
    * @param {number} score - The score
-   * @param {number} accuracy - The accuracy percentage
    * @returns {Promise<number|null>} Rank 1-10 or null
    */
   const getScoreRank = useCallback(
-    async (score, accuracy) => {
+    async (score) => {
       try {
-        return await service.getScoreRank(score, accuracy);
+        return await service.getScoreRank(score);
       } catch (err) {
         console.error("Error getting score rank:", err);
         return null;

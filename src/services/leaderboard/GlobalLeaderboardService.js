@@ -66,16 +66,14 @@ class GlobalLeaderboardService extends LeaderboardService {
     const scores = await this.getTopScores();
     if (scores.length < MAX_ENTRIES) return true;
     const lowestScore = scores[scores.length - 1];
-    return score > lowestScore.score;
+    return score >= lowestScore.score;
   }
 
-  async getScoreRank(score, accuracy) {
+  async getScoreRank(score) {
     const scores = await this.getTopScores();
 
     for (let i = 0; i < scores.length; i++) {
-      if (score > scores[i].score) return i + 1;
-      if (score === scores[i].score && accuracy > scores[i].accuracy)
-        return i + 1;
+      if (score >= scores[i].score) return i + 1;
     }
 
     if (scores.length < MAX_ENTRIES) return scores.length + 1;

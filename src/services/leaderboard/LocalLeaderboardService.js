@@ -44,10 +44,8 @@ class LocalLeaderboardService extends LeaderboardService {
     return [...scores].sort((a, b) => {
       // Primary: higher score wins
       if (b.score !== a.score) return b.score - a.score;
-      // Secondary: higher accuracy wins
-      if (b.accuracy !== a.accuracy) return b.accuracy - a.accuracy;
-      // Tertiary: earlier timestamp wins (reward first achiever)
-      return a.timestamp - b.timestamp;
+      // Secondary: newer timestamp wins (reward latest achiever)
+      return b.timestamp - a.timestamp;
     });
   }
 
@@ -87,17 +85,15 @@ class LocalLeaderboardService extends LeaderboardService {
     if (scores.length < MAX_ENTRIES) return true;
     // Otherwise, must beat the lowest score
     const lowestScore = scores[scores.length - 1];
-    return score > lowestScore.score;
+    return score >= lowestScore.score;
   }
 
-  async getScoreRank(score, accuracy) {
+  async getScoreRank(score) {
     const scores = await this.getTopScores();
 
     // Find where this score would rank
     for (let i = 0; i < scores.length; i++) {
-      if (score > scores[i].score) return i + 1;
-      if (score === scores[i].score && accuracy > scores[i].accuracy)
-        return i + 1;
+      if (score >= scores[i].score) return i + 1;
     }
 
     // If we'd be added at the end and there's room
