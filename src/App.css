@@ -14,6 +14,7 @@ body {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
+  transition: background-color 0.6s ease;
 }
 
 .App-header {
@@ -45,8 +46,12 @@ body {
   padding: 10px 20px;
   border-radius: 50px;
   margin-bottom: 30px;
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  border: 2px solid transparent;
+  transition: box-shadow 0.4s ease, background-color 0.4s ease;
 }
 
 .round-counter h2 {
@@ -54,6 +59,69 @@ body {
   font-size: 16px;
   font-weight: bold;
 }
+
+/* --- Streak Tier 1: Warm (3-4) --- */
+[data-streak-tier="1"] .round-counter {
+  box-shadow: 0 0 18px rgba(252, 191, 73, 0.7), 0 0 36px rgba(252, 191, 73, 0.35);
+  animation: warmFadeIn 0.6s ease-in forwards;
+  border: 2px solid rgba(252, 191, 73, 0.6);
+}
+
+@keyframes warmFadeIn {
+  0% { box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2); border-color: transparent; }
+  100% { box-shadow: 0 0 18px rgba(252, 191, 73, 0.7), 0 0 36px rgba(252, 191, 73, 0.35); border-color: rgba(252, 191, 73, 0.6); }
+}
+
+/* --- Streak Tier 2: Hot (5-6) --- */
+[data-streak-tier="2"] .round-counter {
+  box-shadow: 0 0 22px rgba(247, 127, 0, 0.7), 0 0 44px rgba(247, 127, 0, 0.4), 0 0 60px rgba(252, 191, 73, 0.2);
+  animation: hotPulse 1.4s ease-in-out infinite;
+  border: 2px solid rgba(247, 127, 0, 0.7);
+}
+
+@keyframes hotPulse {
+  0%, 100% { box-shadow: 0 0 22px rgba(247, 127, 0, 0.7), 0 0 44px rgba(247, 127, 0, 0.4), 0 0 60px rgba(252, 191, 73, 0.2); }
+  50% { box-shadow: 0 0 34px rgba(247, 127, 0, 0.9), 0 0 60px rgba(247, 127, 0, 0.6), 0 0 80px rgba(252, 191, 73, 0.3); }
+}
+
+/* --- Streak Tier 3: On Fire (7-9) --- */
+[data-streak-tier="3"] .round-counter {
+  box-shadow: 0 0 24px rgba(214, 40, 40, 0.8), 0 0 48px rgba(247, 127, 0, 0.5), 0 0 72px rgba(252, 191, 73, 0.3);
+  animation: firePulse 0.9s ease-in-out infinite;
+  border: 2px solid rgba(214, 40, 40, 0.7);
+}
+
+@keyframes firePulse {
+  0%, 100% {
+    box-shadow: 0 0 24px rgba(214, 40, 40, 0.8), 0 0 48px rgba(247, 127, 0, 0.5), 0 0 72px rgba(252, 191, 73, 0.3);
+  }
+  50% {
+    box-shadow: 0 0 36px rgba(214, 40, 40, 1), 0 0 64px rgba(247, 127, 0, 0.7), 0 0 90px rgba(252, 191, 73, 0.45);
+  }
+}
+
+/* --- Streak Tier 4: Unstoppable (10) --- */
+[data-streak-tier="4"] .round-counter {
+  box-shadow: 0 0 30px rgba(214, 40, 40, 0.9), 0 0 60px rgba(247, 127, 0, 0.6), 0 0 90px rgba(252, 191, 73, 0.4);
+  animation: infernoPulse 0.6s ease-in-out infinite;
+  border: 2px solid rgba(214, 40, 40, 0.9);
+}
+
+[data-streak-tier="4"].App {
+  background-color: #f0c67a;
+}
+
+@keyframes infernoPulse {
+  0%, 100% {
+    box-shadow: 0 0 30px rgba(214, 40, 40, 0.9), 0 0 60px rgba(247, 127, 0, 0.6), 0 0 90px rgba(252, 191, 73, 0.4);
+    transform: scale(1);
+  }
+  50% {
+    box-shadow: 0 0 44px rgba(214, 40, 40, 1), 0 0 80px rgba(247, 127, 0, 0.8), 0 0 110px rgba(252, 191, 73, 0.55);
+    transform: scale(1.03);
+  }
+}
+
 
 .game-over {
   display: flex;

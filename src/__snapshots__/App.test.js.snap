@@ -4,6 +4,7 @@ exports[`App renders correctly 1`] = `
 <DocumentFragment>
   <div
     class="App"
+    data-streak-tier="0"
   >
     <header
       class="App-header"
