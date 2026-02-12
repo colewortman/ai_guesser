@@ -14,6 +14,7 @@ function App() {
   const [aiImage, setAiImage] = useState(null);
   const [realImage, setRealImage] = useState(null);
   const [AIlocated, setAIlocated] = useState(null);
+  const [streak, setStreak] = useState(0);
 
   // State variables for game logic
   const [showDirections, setShowDirections] = useState(true);
@@ -79,6 +80,23 @@ function App() {
   // Calculate accuracy
   const accuracy = round === 0 ? 0 : ((correct / round) * 100).toFixed(2);
 
+  // Map streak count to a tier and label for styling
+  const getStreakTier = (streak) => {
+    if (streak < 3) {
+      return "0";
+    } else if (streak < 5) {
+      return "1";
+    } else if (streak < 7) {
+      return "2";
+    } else if (streak < 10) {
+      return "3";
+    } else {
+      return "4";
+    }
+  };
+
+  const streakInfo = getStreakTier(streak);
+
   // Handle user submitting a guess
   const handleSubmit = () => {
     if (!guess) return;
@@ -87,6 +105,9 @@ function App() {
 
     if (userCorrect) {
       setCorrect((c) => c + 1);
+      setStreak((s) => s + 1);
+    } else {
+      setStreak(0);
     }
 
     setRound((r) => r + 1);
@@ -157,7 +178,7 @@ function App() {
   };
 
   return (
-    <div className="App">
+    <div className="App" data-streak-tier={streakInfo}>
       <header className="App-header">
         <h1>AI or Real?</h1>
       </header>
