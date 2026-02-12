@@ -44,7 +44,13 @@ jobs:
 
       # 6. Deploy to S3 (CD)
       - name: Sync to S3
-        run: aws s3 sync build/ s3://${{ secrets.S3_BUCKET }} --delete
+        run: |
+          # Backup current production to a versioned folder
+          TIMESTAMP=$(date +%Y%m%d_%H%M%S)
+          aws s3 sync s3://${{ secrets.S3_BUCKET }} s3://${{ secrets.S3_BUCKET }}/backups/$TIMESTAMP/ --exclude "backups/*"
+    
+          # Deploy new version
+          aws s3 sync build/ s3://${{ secrets.S3_BUCKET }} --delete --exclude "backups/*"
 
       # 7. Invalidate CloudFront cache
       - name: Invalidate CloudFront
