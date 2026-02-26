@@ -122,6 +122,50 @@ body {
   }
 }
 
+.play-buttons {
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+}
+
+.timed-button {
+  background-color: #D62828;
+}
+
+.timed-button:not(:disabled):hover {
+  background-color: #a81e1e;
+}
+
+.timer-bar-container {
+  align-self: center;
+  width: 300px;
+  height: 28px;
+  background-color: #ddd;
+  border-radius: 14px;
+  margin-bottom: 20px;
+  position: relative;
+  overflow: hidden;
+}
+
+.timer-bar {
+  height: 100%;
+  border-radius: 14px;
+  transition: width 1s linear, background-color 0.5s ease;
+}
+
+.timer-bar-stopped {
+  transition: none;
+}
+
+.timer-text {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 14px;
+  font-weight: bold;
+  color: #003049;
+}
 
 .game-over {
   display: flex;
@@ -311,6 +355,11 @@ body {
   transform: scale(1.06);
 }
 
+.timed-out {
+  border: 4px solid #D62828 !important;
+  background-color: #fde8e8;
+}
+
 .image-pair {
   display: flex;
   justify-content: center;
@@ -380,6 +429,10 @@ button:not(:disabled):active {
 
 /* Tablet Styles (768px and below) */
 @media (max-width: 768px) {
+  .timer-bar-container {
+    width: 250px;
+  }
+
   .game-over {
     padding: 20px 10px;
   }
@@ -446,6 +499,15 @@ button:not(:disabled):active {
 
 /* Phone Styles (480px and below) */
 @media (max-width: 480px) {
+  .timer-bar-container {
+    width: 200px;
+  }
+
+  .play-buttons {
+    flex-direction: column;
+    gap: 12px;
+  }
+
   .game-over {
     padding: 15px 8px;
   }

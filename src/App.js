@@ -1,5 +1,5 @@
 import React from "react";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { getRandomPairs } from "./utils";
 import { useLeaderboard } from "./hooks/useLeaderboard";
 import { Leaderboard, HighScoreForm } from "./components/Leaderboard";
@@ -15,6 +15,10 @@ function App() {
   const [realImage, setRealImage] = useState(null);
   const [AIlocated, setAIlocated] = useState(null);
   const [streak, setStreak] = useState(0);
+  const [avgTime, setAvgTime] = useState(0);
+  const [timeLeft, setTimeLeft] = useState(15);
+  const [timerActive, setTimerActive] = useState(false);
+  const [totalTime, setTotalTime] = useState(0);
 
   // State variables for game logic
   const [showDirections, setShowDirections] = useState(true);
@@ -23,6 +27,7 @@ function App() {
   const [correct, setCorrect] = useState(0);
   const [guess, setGuess] = useState(null);
   const [submitted, setSubmitted] = useState(false);
+  const [timedMode, setTimedMode] = useState(false);
 
   // State variables for leaderboard
   const [showHighScoreForm, setShowHighScoreForm] = useState(false);
@@ -98,8 +103,10 @@ function App() {
   const streakInfo = getStreakTier(streak);
 
   // Handle user submitting a guess
-  const handleSubmit = () => {
+  const handleSubmit = useCallback(() => {
     if (!guess) return;
+
+    setTimerActive(false);
 
     const userCorrect = guess === AIlocated;
 
@@ -110,14 +117,56 @@ function App() {
       setStreak(0);
     }
 
+    const elapsed = 15 - timeLeft;
+    const newTotal = totalTime + elapsed;
+    setTotalTime(newTotal);
     setRound((r) => r + 1);
+    setAvgTime(newTotal / (round + 1));
     setSubmitted(true);
-  };
+  }, [guess, AIlocated, timeLeft, totalTime, round]);
+
+  // Timer countdown — just ticks down and stops at zero
+  useEffect(() => {
+    if (!timerActive) return;
+
+    const intervalId = setInterval(() => {
+      setTimeLeft((prev) => {
+        if (prev <= 1) {
+          setTimerActive(false);
+          return 0;
+        }
+        return prev - 1;
+      });
+    }, 1000);
+
+    return () => clearInterval(intervalId);
+  }, [timerActive]);
+
+  // Handle timer expiry — runs once when timer stops at zero
+  useEffect(() => {
+    if (timerActive || timeLeft > 0) return;
+    if (submitted) return; // already handled this round
+
+    if (guess) {
+      handleSubmit();
+    } else {
+      setTotalTime((t) => t + 15);
+      setRound((r) => r + 1);
+      setStreak(0);
+      setSubmitted(true);
+      setAvgTime((totalTime + 15) / (round + 1));
+    }
+  }, [timerActive, timeLeft, guess, handleSubmit, round, submitted, totalTime]);
 
   // Handle starting the game
-  const handlePlay = () => {
+  const handlePlay = (timed) => {
+    setTimedMode(timed);
     setShowDirections(false);
     loadNextBatch();
+    if (timed) {
+      setTimeLeft(15);
+      setTimerActive(true);
+    }
   };
 
   // Handle loading the next pair
@@ -143,10 +192,15 @@ function App() {
     setCurrentIndex(nextIndex);
     loadNextPair(batch[nextIndex]);
     setSubmitted(false);
+    if (timedMode) {
+      setTimeLeft(15);
+      setTimerActive(true);
+    }
   };
 
   // Handle playing again
-  const handlePlayAgain = () => {
+  const handlePlayAgain = (timed) => {
+    setTimedMode(timed);
     setGameOver(false);
     setRound(0);
     setCorrect(0);
@@ -156,6 +210,10 @@ function App() {
     setCheckingHighScore(false);
     setPlayerRank(null);
     setNewEntryId(null);
+    setTimeLeft(15);
+    setTimerActive(timed);
+    setTotalTime(0);
+    setAvgTime(0);
     loadNextBatch();
   };
 
@@ -187,6 +245,28 @@ function App() {
         <h2>Round: {round}/10</h2>
       </div>
 
+      {timedMode && !showDirections && !gameOver && (
+        <div className="timer-bar-container">
+          <div
+            className={`timer-bar${timerActive ? "" : " timer-bar-stopped"}`}
+            style={{
+              width: timerActive
+                ? `${((timeLeft - 1) / 15) * 100}%`
+                : timeLeft === 0
+                  ? "0%"
+                  : `${(timeLeft / 15) * 100}%`,
+              backgroundColor:
+                timeLeft > 10
+                  ? "#4caf50"
+                  : timeLeft > 5
+                    ? "#FCBF49"
+                    : "#D62828",
+            }}
+          />
+          <span className="timer-text">{timeLeft}s</span>
+        </div>
+      )}
+
       {showDirections ? (
         <div className="directions">
           <div className="directions-content">
@@ -197,9 +277,20 @@ function App() {
             {loading ? (
               <div className="spinner"></div>
             ) : (
-              <button className="play-button" onClick={handlePlay}>
-                Play
-              </button>
+              <div className="play-buttons">
+                <button
+                  className="play-button"
+                  onClick={() => handlePlay(false)}
+                >
+                  Classic
+                </button>
+                <button
+                  className="play-button timed-button"
+                  onClick={() => handlePlay(true)}
+                >
+                  Timed
+                </button>
+              </div>
             )}
           </div>
         </div>
@@ -213,6 +304,7 @@ function App() {
               You got {correct} out of {round} correct.
             </p>
             <p>Your accuracy: {accuracy}%</p>
+            {timedMode && <p>Avg. Answer Time: {avgTime.toFixed(1)}s</p>}
 
             {showHighScoreForm ? (
               <HighScoreForm
@@ -229,9 +321,14 @@ function App() {
                   loading={leaderboardLoading}
                   highlightId={newEntryId}
                 />
-                <button className="play-again-button" onClick={handlePlayAgain}>
-                  Play Again
-                </button>
+                <div className="play-buttons">
+                  <button className="play-again-button" onClick={() => handlePlayAgain(false)}>
+                    Classic
+                  </button>
+                  <button className="play-again-button timed-button" onClick={() => handlePlayAgain(true)}>
+                    Timed
+                  </button>
+                </div>
               </>
             ) : null}
           </div>
@@ -248,7 +345,7 @@ function App() {
                     ? "ai-image"
                     : "real-image"
                   : ""
-              }`}
+              } ${submitted && !guess && timeLeft === 0 ? "timed-out" : ""}`}
               onClick={() => !submitted && setGuess("left")}
             >
               <img
@@ -263,7 +360,7 @@ function App() {
                     ? "ai-image"
                     : "real-image"
                   : ""
-              }`}
+              } ${submitted && !guess && timeLeft === 0 ? "timed-out" : ""}`}
               onClick={() => !submitted && setGuess("right")}
             >
               <img
