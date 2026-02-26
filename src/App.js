@@ -6,6 +6,8 @@ import { Leaderboard, HighScoreForm } from "./components/Leaderboard";
 import "./App.css";
 
 function App() {
+  const TIMER_DURATION = 10;
+
   // State variables for data
   const [pairs, setPairs] = useState([]);
   const [batch, setBatch] = useState([]);
@@ -16,7 +18,7 @@ function App() {
   const [AIlocated, setAIlocated] = useState(null);
   const [streak, setStreak] = useState(0);
   const [avgTime, setAvgTime] = useState(0);
-  const [timeLeft, setTimeLeft] = useState(15);
+  const [timeLeft, setTimeLeft] = useState(TIMER_DURATION);
   const [timerActive, setTimerActive] = useState(false);
   const [totalTime, setTotalTime] = useState(0);
 
@@ -117,7 +119,7 @@ function App() {
       setStreak(0);
     }
 
-    const elapsed = 15 - timeLeft;
+    const elapsed = TIMER_DURATION - timeLeft;
     const newTotal = totalTime + elapsed;
     setTotalTime(newTotal);
     setRound((r) => r + 1);
@@ -150,11 +152,11 @@ function App() {
     if (guess) {
       handleSubmit();
     } else {
-      setTotalTime((t) => t + 15);
+      setTotalTime((t) => t + TIMER_DURATION);
       setRound((r) => r + 1);
       setStreak(0);
       setSubmitted(true);
-      setAvgTime((totalTime + 15) / (round + 1));
+      setAvgTime((totalTime + TIMER_DURATION) / (round + 1));
     }
   }, [timerActive, timeLeft, guess, handleSubmit, round, submitted, totalTime]);
 
@@ -164,7 +166,7 @@ function App() {
     setShowDirections(false);
     loadNextBatch();
     if (timed) {
-      setTimeLeft(15);
+      setTimeLeft(TIMER_DURATION);
       setTimerActive(true);
     }
   };
@@ -193,7 +195,7 @@ function App() {
     loadNextPair(batch[nextIndex]);
     setSubmitted(false);
     if (timedMode) {
-      setTimeLeft(15);
+      setTimeLeft(TIMER_DURATION);
       setTimerActive(true);
     }
   };
@@ -210,7 +212,7 @@ function App() {
     setCheckingHighScore(false);
     setPlayerRank(null);
     setNewEntryId(null);
-    setTimeLeft(15);
+    setTimeLeft(TIMER_DURATION);
     setTimerActive(timed);
     setTotalTime(0);
     setAvgTime(0);
@@ -251,12 +253,12 @@ function App() {
             className={`timer-bar${timerActive ? "" : " timer-bar-stopped"}`}
             style={{
               width: timerActive
-                ? `${((timeLeft - 1) / 15) * 100}%`
+                ? `${((timeLeft === TIMER_DURATION ? timeLeft : timeLeft - 1) / TIMER_DURATION) * 100}%`
                 : timeLeft === 0
                   ? "0%"
-                  : `${(timeLeft / 15) * 100}%`,
+                  : `${(timeLeft / TIMER_DURATION) * 100}%`,
               backgroundColor:
-                timeLeft > 10
+                timeLeft > TIMER_DURATION
                   ? "#4caf50"
                   : timeLeft > 5
                     ? "#FCBF49"
@@ -322,10 +324,16 @@ function App() {
                   highlightId={newEntryId}
                 />
                 <div className="play-buttons">
-                  <button className="play-again-button" onClick={() => handlePlayAgain(false)}>
+                  <button
+                    className="play-again-button"
+                    onClick={() => handlePlayAgain(false)}
+                  >
                     Classic
                   </button>
-                  <button className="play-again-button timed-button" onClick={() => handlePlayAgain(true)}>
+                  <button
+                    className="play-again-button timed-button"
+                    onClick={() => handlePlayAgain(true)}
+                  >
                     Timed
                   </button>
                 </div>
