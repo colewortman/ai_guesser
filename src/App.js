@@ -31,6 +31,19 @@ function App() {
   const [submitted, setSubmitted] = useState(false);
   const [timedMode, setTimedMode] = useState(false);
 
+  // State for image zoom
+  const [zoomedImage, setZoomedImage] = useState(null);
+
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key === "Escape") setZoomedImage(null);
+    };
+    if (zoomedImage) {
+      document.addEventListener("keydown", handleKeyDown);
+      return () => document.removeEventListener("keydown", handleKeyDown);
+    }
+  }, [zoomedImage]);
+
   // State variables for leaderboard
   const [showHighScoreForm, setShowHighScoreForm] = useState(false);
   const [checkingHighScore, setCheckingHighScore] = useState(false);
@@ -360,6 +373,16 @@ function App() {
                 src={AIlocated === "left" ? aiImage : realImage}
                 alt="left-image"
               />
+              <button
+                className="zoom-button"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setZoomedImage(AIlocated === "left" ? aiImage : realImage);
+                }}
+                aria-label="Expand image"
+              >
+                &#x26F6;
+              </button>
             </div>
             <div
               className={`right-card ${guess === "right" ? "selected" : ""} ${
@@ -375,6 +398,16 @@ function App() {
                 src={AIlocated === "right" ? aiImage : realImage}
                 alt="right-image"
               />
+              <button
+                className="zoom-button"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setZoomedImage(AIlocated === "right" ? aiImage : realImage);
+                }}
+                aria-label="Expand image"
+              >
+                &#x26F6;
+              </button>
             </div>
           </div>
           <div className="button-container">
@@ -393,6 +426,17 @@ function App() {
               Next
             </button>
           </div>
+        </div>
+      )}
+
+      {zoomedImage && (
+        <div className="zoom-overlay" onClick={() => setZoomedImage(null)}>
+          <img
+            className="zoom-overlay-image"
+            src={zoomedImage}
+            alt="Zoomed"
+            onClick={(e) => e.stopPropagation()}
+          />
         </div>
       )}
     </div>
