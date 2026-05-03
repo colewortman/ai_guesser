@@ -1,0 +1,49 @@
+name: Terraform
+
+on:
+  pull_request:
+    paths:
+      - "terraform/**"
+      - ".github/workflows/terraform.yml"
+  workflow_dispatch:
+    inputs:
+      action:
+        description: "plan or apply"
+        type: choice
+        options:
+          - plan
+          - apply
+        default: plan
+
+jobs:
+  terraform:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: terraform
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          cli_config_credentials_token: ${{ secrets.TF_API_TOKEN }}
+
+      - name: Terraform fmt
+        run: terraform fmt -check -recursive
+
+      - name: Terraform init
+        run: terraform init
+
+      - name: Terraform validate
+        run: terraform validate
+
+      - name: Terraform plan
+        if: github.event_name == 'pull_request' || (github.event_name == 'workflow_dispatch' && inputs.action == 'plan')
+        run: terraform plan -no-color -input=false
+
+      - name: Terraform apply
+        if: github.event_name == 'workflow_dispatch' && inputs.action == 'apply'
+        run: terraform apply -auto-approve -input=false
